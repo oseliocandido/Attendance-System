@@ -27,13 +27,13 @@ The `UserController` is responsible for handling operations related to user data
   - Creates a new user in the database. If a user with the same identification already exists, the operation is rolled back and returns None.
 
 - **`select_info_employees(self, selected_columns: list) -> User:`**
-  - Retrieves all information about registered employees with only selected columns.
+  - Retrieves all information about registered employees with only selected fields.
 
-- **`update_employee(self, user_id: str, name: str, identification: str) -> None:`**
+- **`update_employee(self, user_id: str, selecte_columns: list) -> None:`**
   - Updates an existing user's details in the database. Rolls back the transaction if there is an error during the operation.
 
-- **`update_employees_status(self, id:str, status: str) -> UserDTO:`**
-  - Updates the status of all employees in the database. 
+- **`update_employees_status(self, user_id:str, status: str) -> UserDTO:`**
+  - Updates the status of a employee in the database. 
 
 ### UserView
 
