@@ -30,7 +30,7 @@ The `UserController` is responsible for handling operations related to user data
   Creates a new user in the database. If a user with the same identification already exists, the operation is rolled back and returns None.
 - `select_info_employees(self, selected_columns: list) -> User:`
   Retrieves all information about registered employees with only selected fields.
-- `update_employee(self, user_id: str, selecte_columns: list) -> None:`
+- `update_employee(self, user_id: str, selecte_columns: list) -> UserDTO:`
   Updates an existing user's details in the database. Rolls back the transaction if there is an error during the operation.
 - `update_employees_status(self, user_id:str, status: str) -> UserDTO:`
   Updates the status of a employee in the database. 
@@ -108,23 +108,81 @@ These rules are critical when creating a new user as they help ensure the consis
 Sensitive data like API keys and database credentials are managed using Streamlit secrets. This file is not included in the Git repository due to security reasons and is present in the .gitignore file. AWS Secrets Manager or similar service can be used to manage and retrieve these secrets in a production environment.
 
 ## Dependencies
-
 - Python 3.6+
 - SQLite
 - Streamlit
 - User and Attendance Models (`from models.user import User`, `from models.attendance import Attendance, AttendanceName`)
-
-
 - Logger Utility (`from utils.logs import log_function_calls`)
 
 ## Usage
 
-Initialize instances of UserController and AttendanceController with a path to an SQLite database. Use their methods to manage user and attendance data. Initialize instances of UserView and AttendanceView to provide a user interface for data management. For example:
+This project employs a central `main` function to handle the operation of the system. In this function, instances of `UserController` and `AttendanceController` are initialized with a path to an SQLite database, which is obtained from the `db_path` variable in the `utils.database` module.
+
+Similarly, instances of `UserView` and `AttendanceView` are also created, which are then used to manage user interactions and system outputs.
+
+The core code structure is as follows:
 
 ```python
-user_controller = UserController('/path/to/database.db')
-attendance_controller = AttendanceController('/path/to/database.db')
+from utils.database import create_table_users, create_table_attendance, create_table_logs, db_path
 
-user_view = UserView(user_controller)
-attendance_view = AttendanceView(attendance_controller)
+def main():
+    # Set Streamlit page configuration
+    st.set_page_config(
+        page_title="Employee Attendance Management System",
+        page_icon="📋",
+        initial_sidebar_state="expanded"
+    )   
+
+    # Instantiate controllers
+    user_controller = UserController(db_path)
+    attendance_controller = AttendanceController(db_path)
+
+    # Instantiate views
+    user_view = UserView(user_controller)
+    attendance_view = AttendanceView(user_controller, attendance_controller)
+
+    # Define user actions and corresponding functions
+    actions = {
+        "Employee Management": ["Register", "View", "Update", "Activate / Deactivate"],
+        "Attendance Control": ["Register Attendance", "View Records","Modify Records","Send Data"]
+    }
+
+    # User selection handling in the sidebar
+    action_type = st.sidebar.radio("Category", list(actions.keys()))
+    page = st.sidebar.selectbox(f"Function", actions[action_type])
+
+    # Call corresponding functions based on user's selection
+    # If action type is 'Employee Management'
+    if action_type == 'Employee Management':
+        if page == "Register":
+            user_view.insert_user()
+        elif page == "View":
+            user_view.select_users()
+        elif page == "Update":
+            user_view.update_user()
+        elif page == "Activate / Deactivate":
+            user_view.updatestatus_users()
+    # If action type is 'Attendance Control'
+    else:
+        if page == "Register Attendance":
+            attendance_view.create_attendance()
+        elif page == "View Records":
+            attendance_view.get_attendances()
+        elif page == "Modify Records":
+            attendance_view.change_attendance()
+        elif page == "Send Data":
+            attendance_view.send_mail_data()
+
+
+if __name__ == '__main__':
+    # Create necessary tables in the database
+    create_table_users()
+    create_table_attendance()
+    create_table_logs()
+
+    # Call the main function
+    main()
 ```
+This configuration allows for a flexible, modular system where new actions and their corresponding functions can be added easily 
+as the project expands.
+When the program is run, it creates necessary tables in the database and then calls the main function to start the interactive interface.
