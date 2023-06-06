@@ -22,7 +22,7 @@ The `UserController` is responsible for handling operations related to user data
 - **`__init__(self, db_path: str) -> None:`**
   - Initializes the UserController with the provided database path.
 
-- **`create_user(self, name: str, identification: str) -> User:`**
+- **`insert_user(self, name: str, identification: str) -> User:`**
   - Creates a new user in the database. If a user with the same identification already exists, the operation is rolled back and returns None.
 
 - **`get_user_by_id(self, user_id: str) -> User:`**
@@ -30,6 +30,9 @@ The `UserController` is responsible for handling operations related to user data
 
 - **`update_user(self, user_id: str, name: str, identification: str) -> None:`**
   - Updates an existing user's details in the database. Rolls back the transaction if there is an error during the operation.
+
+- **`update_employees_status(self, active: str) -> None:`**
+  - Updates the status of all employees in the database.
 
 ### UserView
 
@@ -46,6 +49,9 @@ The `UserView` is responsible for providing a user interface for managing user d
 
 - **`view_user_interface(self) -> None:`**
   - Provides a user interface to view the details of an existing user.
+
+- **`update_status_users_interface(self) -> None:`**
+  - Provides a user interface to update the status of all employees in the database.
 
 ## Section 2: Attendance Management
 
@@ -68,12 +74,12 @@ The `AttendanceController` is responsible for handling operations related to use
 - **`get_attendance_by_userid(self, user_id: str) -> List[Attendance]:`**
   - Retrieves all attendance records from the database that are associated with a given user ID.
 
-- **`modify_attendance(self, user_id: str, date: str, time: str, type: str) -> None:`**
-  - Modifies an existing attendance record in the database using the given user ID, date, time, and type. If there is an error during the operation, it rolls back the transaction.
+- **`
 
-- **`get_attendance_by_user_periods(self,
+modify_attendance(self, user_id: str, date: str, time: str, point_type: str) -> None:`**
+  - Modifies an existing attendance record in the database.
 
- user_id: str, start_date: str, end_date: str) -> List[Attendance]:`**
+- **`get_attendance_by_user_periods(self, user_id: str, start_date: str, end_date: str) -> List[Attendance]:`**
   - Retrieves all attendance records from the database that are associated with a specific user ID and within a specified date range.
 
 - **`get_all_attendances_by_periods(self, start_date: str, end_date: str) -> List[Attendance]:`**
@@ -86,16 +92,16 @@ The `AttendanceController` is responsible for handling operations related to use
 The `AttendanceView` provides a user interface for managing user attendance. It leverages Streamlit to create an easy-to-use interface.
 
 #### Methods
-- **`add_attendance_interface(self) -> None:`**
+- **`add_attendance(self) -> None:`**
   - Provides a user interface to add a new attendance record to the database.
 
-- **`modify_attendance_interface(self) -> None:`**
+- **`modify_attendance(self) -> None:`**
   - Provides a user interface to modify an existing attendance record.
 
-- **`view_attendance_by_user_interface(self) -> None:`**
+- **`view_attendance_by_user(self) -> None:`**
   - Provides a user interface to view the attendance records of a specific user.
 
-- **`view_all_attendances_interface(self) -> None:`**
+- **`view_all_attendances(self) -> None:`**
   - Provides a user interface to view all attendance records in a given date range.
 
 ## Dependencies
