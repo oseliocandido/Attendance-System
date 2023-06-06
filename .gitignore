@@ -1,0 +1,8 @@
+__pycache__/
+views/__pycache__/
+models/__pycache__/
+controllers/__pycache__/
+/utils/__pycache__
+.vscode/
+/.streamlit/secrets.toml
+deploy-prod.bat
