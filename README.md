@@ -106,14 +106,22 @@ Validation rules have been established in this project to ensure the integrity o
 These rules are critical when creating a new user as they help ensure the consistency and accuracy of user data.
 
 ## Section 6: Streamlit Secrets Management
-Sensitive data like API keys and database credentials are managed using Streamlit secrets. This file is not included in the Git repository due to security reasons and is present in the .gitignore file. AWS Secrets Manager or similar service can be used to manage and retrieve these secrets in a production environment.
+Sensitive data like API keys and database credentials are managed using Streamlit secrets. This file is not included in the Git repository due to security reasons and is present in the .gitignore file. 
 
-## Dependencies
-- Python 3.6+
-- SQLite
-- Streamlit
-- User and Attendance Models (`from models.user import User`, `from models.attendance import Attendance, AttendanceName`)
-- Logger Utility (`from utils.logs import log_function_calls`)
+When pulling your app, add a file called `secrets.toml` in a folder called `.streamlit` at the root of the repo and copy/paste your own secrets into that file. More details [here](https://docs.streamlit.io/streamlit-community-cloud/get-started/deploy-an-app/connect-to-data-sources/secrets-management).
+
+## Section 7: Logging Function Calls
+
+The `log.py` file on  `utils` folder contains a decorator function called `log_function_calls` that is used to add logging when some functions are called in the interface. It will store these logs into SQLite database table called `function_calls_log`.
+
+## Section 8: Dependencies
+You can install all the required dependencies by running the following command in your terminal:
+
+```bash
+pip install -r requirements.txt
+```
+The `requirements.txt` file contains a list of all the Python packages and their versions required to run the project. 
+
 
 ## Usage
 
