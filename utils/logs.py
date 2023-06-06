@@ -12,7 +12,8 @@ mapping_controller_functions_to_log = {
     'get_attendance_by_user_periods': 'obter_frequencia_por_periodo',
     'get_attendance_by_userid': 'obter_frequencia_por_id_usuario',
     'modify_attendance': 'alterar_frequencia',
-    'get_all_attendances_by_periods': 'enviar_email'
+    'get_all_attendances_by_periods': 'enviar_email',
+    'delete_attendance':'deletar_frequencia'
 }
 
 def log_function_calls(func):

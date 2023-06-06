@@ -184,12 +184,57 @@ class AttendanceView:
                     all_df = pd.concat(df_list)
                     all_df['Data'] = pd.to_datetime(all_df['Data'])
                     all_df = all_df.sort_values(by="Data", ascending=False)
+                    all_df = all_df.reindex(columns= ['Data'] + AttendanceView.options)
                     all_df = all_df.fillna('-')
                     all_df = brazilian_date(all_df, ['Data'])
-                    all_df = all_df.reindex(columns= ['Data'] + AttendanceView.options)
                     pretty_html_table(all_df)
                 else:
                     st.error(f'Sem registros para {selected_user} no período')
+
+
+    def delete_attendance(self):
+        st.markdown('<h4 style="color:white;">Deletar Registros', unsafe_allow_html=True)
+        users = self.user_controller.select_info_employees(['numero_identificacao','complete_name','status'])
+        user_names = [user.complete_name for user in users if user.status == "Ativo"]
+        selected_user = st.selectbox("Funcionário", user_names)
+        point_type = st.selectbox("Tipo de Ponto", AttendanceView.options)
+        date = st.date_input(label="Data", help="Formato Ano/Mês/Dia",max_value=datetime.now()).strftime('%Y-%m-%d')
+
+        if selected_user is not None:
+            user_id = users[user_names.index(selected_user)].numero_identificacao
+            attendances = self.attendance_controller.get_attendance_by_userid(user_id)
+            attendance_data = {
+                "Data": [attendance.date for attendance in attendances],
+                "time": [attendance.time for attendance in attendances],
+                "type": [attendance.type for attendance in attendances]
+            }
+
+            combined_attendance_data = list(zip(attendance_data["Data"], attendance_data["type"], attendance_data["time"]))
+            matching_attendance = [(item[0], item[1], item[2]) for item in combined_attendance_data if item[1] == point_type and item[0] == date]
+            portuguese_date = datetime.strftime(datetime.strptime(date, '%Y-%m-%d'), '%d-%m-%Y')
+
+            if matching_attendance:
+                previous_date, previous_type, previous_time = matching_attendance[0]
+                st.info(f'Ponto de {point_type} de {selected_user} em {portuguese_date} é {previous_time}.')
+                app_pass = st.text_input(label=":red[Senha]", type="password")
+                is_correct_password = is_authenticated_password(app_pass)
+                if app_pass == '':
+                    pass
+                elif not is_correct_password:
+                    st.error('Senha Incorreta!')
+                if is_correct_password:
+                    if st.button("Deletar Ponto"):
+                        self.attendance_controller.delete_attendance(user_id, date, point_type, log_call=True)
+                        st.success("Ponto deletado com sucesso!")
+            else:
+                st.error(f'{selected_user} não possui ponto do tipo {point_type} em {portuguese_date}')
+        else:
+            st.error(f'Sem dados para {selected_user}.')
+
+
+
+
+
 
 
     def send_mail_data(self):

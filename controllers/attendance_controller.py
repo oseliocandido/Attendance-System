@@ -99,3 +99,31 @@ class AttendanceController:
         conn.close()
         return attendances
     
+    @log_function_calls
+    def delete_attendance(self, user_id, date, point_type):
+        conn = sqlite3.connect(self.db_path)
+        c = conn.cursor()
+        
+        c.execute("""DELETE FROM attendance 
+                    WHERE user_id = ? AND date = ? AND type = ?""", 
+                (user_id, date, point_type))
+        conn.commit()
+        conn.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       

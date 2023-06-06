@@ -26,7 +26,9 @@ def main():
 
     actions = {
                 "Gestão de Funcionários": ["Cadastrar", "Consultar", "Alterar", "Ativar / Desativar"],
-                "Controle de Ponto": ["Registrar Ponto", "Consultar Registros","Alterar Registros","Enviar Dados"]
+                "Controle de Ponto": ["Registrar Ponto", "Consultar Registros",
+                                      "Alterar Registros","Deletar Registros",
+                                      "Enviar Dados"]
                 }
     action_type = st.sidebar.radio("Categoria", list(actions.keys()))
     st.sidebar.write('')
@@ -50,6 +52,8 @@ def main():
             attendance_view.change_attendance()
         elif page == "Enviar Dados":
             attendance_view.send_mail_data()
+        elif page == "Deletar Registros":
+            attendance_view.delete_attendance()
 
 
 
