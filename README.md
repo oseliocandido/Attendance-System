@@ -1,43 +1,119 @@
-# Attendance System - Employee Management Module
-
-The Employee Management Module of the Attendance System is developed using Python. It utilizes an SQLite database to manage the user data, and follows an MVC (Model-View-Controller) design pattern. The `UserController.py` file defines the Controller and includes all the functionalities related to user operations such as insert, select, update status and update an existing employee. 
-
-The code can be found in the section titled "UserController.py Code".
+# Employee Attendance Management System
 
 ## Overview
-
-The `UserController` class controls the interaction between the View (`UserView.py`) and the Models (`User` and `UserDTO`). It handles the business logic for user management. It uses SQLite to handle all its database operations and leverages the `sqlite3` package in Python for this. 
-
-Each method in the `UserController` class is decorated with the `@log_function_calls` decorator. This decorator is used to log function calls which is useful for debugging and understanding the flow of control in the application.
-
-## UserController.py Code
-
-The code provided includes the following methods:
-
-1. `__init__(self, db_path)`: Initializes the UserController with a database path.
-2. `insert_employee(self, inputs)`: Inserts a new employee's data into the database.
-3. `select_info_employees(self, selected_columns)`: Selects specific employee information from the database.
-4. `update_employees_status(self, id, status)`: Updates the status of an employee in the database.
-5. `update_employee(self, selected_columns, user_id)`: Updates the information of an existing employee in the database.
-
-Note: See the "Business Rules" section below for more details on the business rules implemented in these methods.
-
-```python
-[UserController.py Code Here]
-```
+This project contains the core functionality to manage user details and their attendance records using SQLite for data storage and Streamlit for user interface. The project is divided into two main sections: Users and Attendance.
 
 ## Business Rules
+- Each user must have a unique ID.
+- User details like name and identification number can be updated.
+- Attendance records can be created and modified.
+- Each attendance record is associated with a user ID and includes date, time, and type.
+- It is possible to fetch attendance records based on user ID and specific time periods.
 
-1. **insert_employee(self, inputs)**: This method takes a dictionary of inputs, containing data about an employee to be added to the system. These data include personal and contact information, role, and notes. It uses a transaction to ensure atomicity - if an error occurs during the insertion process, the changes are rolled back and the database remains in a consistent state.
+## Section 1: User Management
 
-2. **select_info_employees(self, selected_columns)**: This method fetches selected information about all employees in the database. The columns to be retrieved are passed as a list. The fetched data is used to instantiate `UserDTO` objects, which are then returned as a list.
+### UserController
 
-3. **update_employees_status(self, id, status)**: This method is responsible for updating the status of an employee in the system. The status can either be "Ativo" or "Inativo". This change is based on the user ID passed in as an argument. It first retrieves the user data from the database and checks if the user exists. If not, it returns `None`. If the user is found, the status is updated and the updated `UserDTO` object is returned.
+#### Description
 
-4. **update_employee(self, selected_columns, user_id)**: This method allows updating an employee's details in the database. The `selected_columns` parameter is a list of tuples, where each tuple contains a column name and the corresponding new value. It first updates the relevant fields for the employee, and then fetches the updated user data, returning a `UserDTO` object containing the updated data.
+The `UserController` is responsible for handling operations related to user data. It interacts with an SQLite database to store and retrieve user data.
 
-Please ensure you have the necessary permissions to perform these operations, and that the input provided follows the correct format and adheres to all relevant rules and constraints. Always test your functions with various edge cases to ensure they handle all potential input correctly. Also, ensure to handle any exceptions that may occur and log them for troubleshooting.
+#### Methods
+- **`__init__(self, db_path: str) -> None:`**
+  - Initializes the UserController with the provided database path.
 
----
+- **`create_user(self, name: str, identification: str) -> User:`**
+  - Creates a new user in the database. If a user with the same identification already exists, the operation is rolled back and returns None.
 
-As your project evolves, please continue to update this README to ensure it accurately reflects the current state of your project.
+- **`get_user_by_id(self, user_id: str) -> User:`**
+  - Retrieves a user from the database using the provided user ID.
+
+- **`update_user(self, user_id: str, name: str, identification: str) -> None:`**
+  - Updates an existing user's details in the database. Rolls back the transaction if there is an error during the operation.
+
+### UserView
+
+#### Description
+
+The `UserView` is responsible for providing a user interface for managing user data. It leverages Streamlit to create an easy-to-use interface.
+
+#### Methods
+- **`add_user_interface(self) -> None:`**
+  - Provides a user interface to add a new user to the database.
+
+- **`update_user_interface(self) -> None:`**
+  - Provides a user interface to update the details of an existing user.
+
+- **`view_user_interface(self) -> None:`**
+  - Provides a user interface to view the details of an existing user.
+
+## Section 2: Attendance Management
+
+### AttendanceController
+
+#### Description
+
+The `AttendanceController` is responsible for handling operations related to user attendance. It interacts with an SQLite database to store and retrieve attendance data.
+
+#### Methods
+- **`__init__(self, db_path: str) -> None:`**
+  - Initializes the AttendanceController with the provided database path.
+
+- **`check_attendance(self, user_id: str, date: str, type: str, time: str) -> Attendance:`**
+  - Checks if a given attendance record exists. If not, it creates the record. If the record already exists, it rolls back the operation and returns None.
+
+- **`create_attendance(self, user_id: str, date: str, type: str, time: str) -> Attendance:`**
+  - Creates a new attendance record in the database with the provided user ID, date, type, and time. If a record with these parameters already exists, it will roll back the operation and return None.
+
+- **`get_attendance_by_userid(self, user_id: str) -> List[Attendance]:`**
+  - Retrieves all attendance records from the database that are associated with a given user ID.
+
+- **`modify_attendance(self, user_id: str, date: str, time: str, type: str) -> None:`**
+  - Modifies an existing attendance record in the database using the given user ID, date, time, and type. If there is an error during the operation, it rolls back the transaction.
+
+- **`get_attendance_by_user_periods(self,
+
+ user_id: str, start_date: str, end_date: str) -> List[Attendance]:`**
+  - Retrieves all attendance records from the database that are associated with a specific user ID and within a specified date range.
+
+- **`get_all_attendances_by_periods(self, start_date: str, end_date: str) -> List[Attendance]:`**
+  - Fetches all attendance records for all users within a specified date range. This method also retrieves the complete name of each user from a join operation with the users table.
+
+### AttendanceView
+
+#### Description
+
+The `AttendanceView` provides a user interface for managing user attendance. It leverages Streamlit to create an easy-to-use interface.
+
+#### Methods
+- **`add_attendance_interface(self) -> None:`**
+  - Provides a user interface to add a new attendance record to the database.
+
+- **`modify_attendance_interface(self) -> None:`**
+  - Provides a user interface to modify an existing attendance record.
+
+- **`view_attendance_by_user_interface(self) -> None:`**
+  - Provides a user interface to view the attendance records of a specific user.
+
+- **`view_all_attendances_interface(self) -> None:`**
+  - Provides a user interface to view all attendance records in a given date range.
+
+## Dependencies
+
+- Python 3.6+
+- SQLite
+- Streamlit
+- User and Attendance Models (`from models.user import User`, `from models.attendance import Attendance, AttendanceName`)
+- Logger Utility (`from utils.logs import log_function_calls`)
+
+## Usage
+
+Initialize instances of UserController and AttendanceController with a path to an SQLite database. Use their methods to manage user and attendance data. Initialize instances of UserView and AttendanceView to provide a user interface for data management. For example:
+
+```python
+user_controller = UserController('/path/to/database.db')
+attendance_controller = AttendanceController('/path/to/database.db')
+
+user_view = UserView(user_controller)
+attendance_view = AttendanceView(attendance_controller)
+```
