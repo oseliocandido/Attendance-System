@@ -1,21 +1,19 @@
 # Employee Attendance Management System
 
 ## Overview
-The Employee Attendance Management System project is designed to manage user details and their attendance records. The project leverages SQLite for data storage and Streamlit for user interface, and is organized into two key components: User Management and Attendance Management.
+The Employee Attendance Management System project is designed to manage user details and their attendance records. The project uses SQLite for data storage and Streamlit for user interface and is organized into two key components: User Management and Attendance Management.
 
-The project is hosted on an AWS EC2 instance, ensuring a high level of availability and scalability. It incorporates a continuous integration and continuous deployment (CI/CD) pipeline to keep the system updated with the most recent changes. This is achieved through a batch script that automatically fetches and integrates updates from a GitHub repository.
+The production project is hosted on AWS EC2 instance, ensuring a high level of availability and scalability. It incorporates a simple continuous integration and continuous deployment (CI/CD) pipeline to keep the system updated with the most recent changes with a batch script that automatically fetches and integrates updates from a GitHub repository.
 
-For secure handling of sensitive information, the project utilizes Streamlit's secrets management. It is worth noting that this secret data is not included in the Git repository, owing to the placement of these files in the .gitignore list, which restricts their push to the Git repository. 
+For secure handling of sensitive information, the project utilizes Streamlit's secrets management. It is worth that this secret data is not included in the Git repository and these files are in the .gitignore list which restricts their push to the Git repository. 
 
-This README document is structured into various sections, each providing detailed information about different aspects of the project. These include sections for User Management, Attendance Management, CI/CD setup, AWS Hosting, Validation Rules, and Streamlit Secrets Management.
+This document is structured into various sections, each providing detailed information about different aspects of the project. These include sections for User Management, Attendance Management, CI/CD setup, Validation Rules and  Secrets Management.
 
 ## Business Rules
 - Each user must have a unique ID.
-- User details like name and identification number can be updated.
-- Attendance records can be created and modified.
+- User details and Attendance records can be created and modified.
 - Each attendance record is associated with a user ID and includes date, time, and type.
-- It is possible to fetch attendance records based on user ID and specific time periods.
-- The user can retrieve the records of attendance with date range related to current and previous two months only.
+- It is possible to fetch attendance records based on user ID with specific time periods (3 months only).
 
 ## Section 1: User Management
 
@@ -88,11 +86,14 @@ The `AttendanceView` provides a user interface for managing user attendance. It 
   Provides a user interface to view all attendance records in a given date range with send mail button.
 
 ## Section 3: CI/CD Setup
-We use a simple batch file to perform continuous integration and deployment (CI/CD) of the project. The script activates the appropriate environment, kills any existing Streamlit process, pulls the latest changes from the main branch of the GitHub repository, and runs the Streamlit app. This ensures that the project is always up-to-date with the latest changes made to the codebase.
+Batch file located on `deploy` folder to perform continuous integration and deployment (CI/CD) of the project. The script  kills any existing Streamlit process, pulls the latest changes from the main branch of the GitHub repository and runs the Streamlit app up-to-date code.
 
-
-## Section 4: AWS Hosting
-The project is hosted on an AWS EC2 instance. We make use of the CI/CD setup to continuously fetch the latest changes from the GitHub repository and update the running application on the EC2 instance. This ensures that our application is always running the most recent version of the code.
+## Section 4: Permissions
+Certain features and actions in the Employee Attendance Management System require authentication using a password. These features include:
+- Creating User
+- Updating User Information
+- Updating Employee Status
+- Modifying Attendance Records
 
 ## Section 5: Validation Rules
 Validation rules have been established in this project to ensure the integrity of data that's being entered. Here are the key rules:
