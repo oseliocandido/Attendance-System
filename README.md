@@ -74,9 +74,7 @@ The `AttendanceController` is responsible for handling operations related to use
 - **`get_attendance_by_userid(self, user_id: str) -> List[Attendance]:`**
   - Retrieves all attendance records from the database that are associated with a given user ID.
 
-- **`
-
-modify_attendance(self, user_id: str, date: str, time: str, point_type: str) -> None:`**
+- **`modify_attendance(self, user_id: str, date: str, time: str, point_type: str) -> None:`**
   - Modifies an existing attendance record in the database.
 
 - **`get_attendance_by_user_periods(self, user_id: str, start_date: str, end_date: str) -> List[Attendance]:`**
@@ -92,17 +90,17 @@ modify_attendance(self, user_id: str, date: str, time: str, point_type: str) -> 
 The `AttendanceView` provides a user interface for managing user attendance. It leverages Streamlit to create an easy-to-use interface.
 
 #### Methods
-- **`add_attendance(self) -> None:`**
+- **`create_attendance(self) -> None:`**
   - Provides a user interface to add a new attendance record to the database.
 
-- **`modify_attendance(self) -> None:`**
+- **`change_attendance(self) -> None:`**
   - Provides a user interface to modify an existing attendance record.
 
-- **`view_attendance_by_user(self) -> None:`**
+- **`get_attendances(self) -> None:`**
   - Provides a user interface to view the attendance records of a specific user.
 
-- **`view_all_attendances(self) -> None:`**
-  - Provides a user interface to view all attendance records in a given date range.
+- **`send_mail_data(self) -> None:`**
+  - Provides a user interface to view all attendance records in a given date range with send mail button.
 
 ## Dependencies
 
