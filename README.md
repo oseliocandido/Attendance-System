@@ -9,6 +9,7 @@ This project contains the core functionality to manage user details and their at
 - Attendance records can be created and modified.
 - Each attendance record is associated with a user ID and includes date, time, and type.
 - It is possible to fetch attendance records based on user ID and specific time periods.
+- The user can retrieve the records of attendance with date range related to current and previous two months only.
 
 ## Section 1: User Management
 
@@ -22,17 +23,17 @@ The `UserController` is responsible for handling operations related to user data
 - **`__init__(self, db_path: str) -> None:`**
   - Initializes the UserController with the provided database path.
 
-- **`insert_user(self, name: str, identification: str) -> User:`**
+- **`insert_employeee(self, inputs: dict) -> User:`**
   - Creates a new user in the database. If a user with the same identification already exists, the operation is rolled back and returns None.
 
-- **`get_user_by_id(self, user_id: str) -> User:`**
-  - Retrieves a user from the database using the provided user ID.
+- **`select_info_employees(self, selected_columns: list) -> User:`**
+  - Retrieves all information about registered employees with only selected columns.
 
-- **`update_user(self, user_id: str, name: str, identification: str) -> None:`**
+- **`update_employee(self, user_id: str, name: str, identification: str) -> None:`**
   - Updates an existing user's details in the database. Rolls back the transaction if there is an error during the operation.
 
-- **`update_employees_status(self, active: str) -> None:`**
-  - Updates the status of all employees in the database.
+- **`update_employees_status(self, id:str, status: str) -> UserDTO:`**
+  - Updates the status of all employees in the database. 
 
 ### UserView
 
@@ -41,16 +42,16 @@ The `UserController` is responsible for handling operations related to user data
 The `UserView` is responsible for providing a user interface for managing user data. It leverages Streamlit to create an easy-to-use interface.
 
 #### Methods
-- **`add_user_interface(self) -> None:`**
+- **`insert_user(self) -> None:`**
   - Provides a user interface to add a new user to the database.
 
-- **`update_user_interface(self) -> None:`**
+- **`update_user(self) -> None:`**
   - Provides a user interface to update the details of an existing user.
 
-- **`view_user_interface(self) -> None:`**
-  - Provides a user interface to view the details of an existing user.
+- **`select_users(self) -> None:`**
+  - Provides a user interface to view the details of all registered employees.
 
-- **`update_status_users_interface(self) -> None:`**
+- **`update_status_users(self) -> None:`**
   - Provides a user interface to update the status of all employees in the database.
 
 ## Section 2: Attendance Management
