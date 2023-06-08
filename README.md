@@ -70,6 +70,9 @@ The `AttendanceController` is responsible for handling operations related to use
   Retrieves all attendance records from the database that are associated with a specific user ID and within a specified date range.
 - `get_all_attendances_by_periods(self, start_date: str, end_date: str) -> List[Attendance]:`
   Fetches all attendance records for all users within a specified date range. This method also retrieves the complete name of each user from a join operation with the users table.
+- `delete_attendance(self, user_id: str, date: str, point_type: str) -> None:`
+   Delete the attedance of specific employee on certain date and point_type.
+  
 
 ### AttendanceView
 
@@ -82,6 +85,8 @@ The `AttendanceView` provides a user interface for managing user attendance. It 
   Provides a user interface to modify an existing attendance record.
 - `get_attendances(self) -> None:`
   Provides a user interface to view the attendance records of a specific user.
+- `delete_attendance(self) -> None:`
+  Provides a user interface to the delete attendance records of a specific user, date and point_type.
 - `send_mail_data(self) -> None:`
   Provides a user interface to view all attendance records in a given date range with send mail button.
 
