@@ -10,10 +10,10 @@ from email.mime.application import MIMEApplication
 
 def send_email(df,selected_month_pt):
     # Create a BytesIO object, save the Excel file in memory
+    df = df.reindex(columns= ['Data','Nome'] + ["Entrada", "Entrada Almoço", "Saída Almoço", "Saída"])
     output = BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
          for name in df['Nome'].unique():
-
             employee_df = df[df['Nome'] == name].copy()
             employee_df.to_excel(writer, index=False, sheet_name=name)
     output.seek(0) 
