@@ -18,10 +18,12 @@ class AttendanceView:
         self.user_controller = user_controller
         self.attendance_controller = attendance_controller
 
+
     def create_attendance(self):
         st.markdown('<h4 style="color:white;">Registrar Ponto</h4>', unsafe_allow_html=True)
         users = self.user_controller.select_info_employees(['numero_identificacao','complete_name','status'])
-        user_names = [user.complete_name for user in users if user.status == "Ativo"]
+        active_users = [user for user in users if user.status == "Ativo"]
+        user_names = [user.complete_name for user in active_users]
         selected_user = st.selectbox("Funcionários Ativos", user_names)
 
         current_datetime = datetime.now(timezone('America/Sao_Paulo'))
@@ -51,7 +53,7 @@ class AttendanceView:
 
         if selected_user is not None:
             if st.button("Registrar"):
-                user_id = users[user_names.index(selected_user)].numero_identificacao
+                user_id = active_users[user_names.index(selected_user)].numero_identificacao
                 attendance = self.attendance_controller.check_attendance(user_id, current_date_ymd, point_type, current_time)
                 if isinstance(attendance, Attendance):
                     self.attendance_controller.create_attendance(user_id, current_date_ymd, point_type, current_time , log_call=True)
@@ -76,13 +78,14 @@ class AttendanceView:
     def change_attendance(self):
         st.markdown('<h4 style="color:white;">Alteração de Ponto', unsafe_allow_html=True)
         users = self.user_controller.select_info_employees(['numero_identificacao','complete_name','status'])
-        user_names = [user.complete_name for user in users if user.status == "Ativo"]
-        selected_user = st.selectbox("Funcionário", user_names)
+        active_users = [user for user in users if user.status == "Ativo"]
+        user_names = [user.complete_name for user in active_users]
+        selected_user = st.selectbox("Funcionários Ativos", user_names)
         point_type = st.selectbox("Tipo de Ponto", ["Entrada", "Entrada Almoço", "Saída Almoço", "Saída"])
         date = st.date_input(label="Data", help="Formato Ano/Mês/Dia",max_value=datetime.now()).strftime('%Y-%m-%d')
 
         if selected_user is not None:
-            user_id = users[user_names.index(selected_user)].numero_identificacao
+            user_id = active_users[user_names.index(selected_user)].numero_identificacao
             attendances = self.attendance_controller.get_attendance_by_userid(user_id)
             attendance_data = {
                 "Data": [attendance.date for attendance in attendances],
@@ -195,13 +198,15 @@ class AttendanceView:
     def delete_attendance(self):
         st.markdown('<h4 style="color:white;">Deletar Registros', unsafe_allow_html=True)
         users = self.user_controller.select_info_employees(['numero_identificacao','complete_name','status'])
-        user_names = [user.complete_name for user in users if user.status == "Ativo"]
-        selected_user = st.selectbox("Funcionário", user_names)
+        active_users = [user for user in users if user.status == "Ativo"]
+        user_names = [user.complete_name for user in active_users]
+        selected_user = st.selectbox("Funcionários Ativos", user_names)
+
         point_type = st.selectbox("Tipo de Ponto", AttendanceView.options)
         date = st.date_input(label="Data", help="Formato Ano/Mês/Dia",max_value=datetime.now()).strftime('%Y-%m-%d')
 
         if selected_user is not None:
-            user_id = users[user_names.index(selected_user)].numero_identificacao
+            user_id = active_users[user_names.index(selected_user)].numero_identificacao
             attendances = self.attendance_controller.get_attendance_by_userid(user_id)
             attendance_data = {
                 "Data": [attendance.date for attendance in attendances],
